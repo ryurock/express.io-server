@@ -1,0 +1,31 @@
+{
+  "name": "node-socket-server",
+  "version": "0.0.1",
+
+  "author": "Ryusuke Kimura",
+
+  "keywords": [
+    "nodeJS",
+    "node",
+    "socket.io"
+  ],
+
+  "description": "A simple helpful robot for your Company",
+
+  "licenses": [{
+    "type": "Apache GPL Licence",
+    "url": "https://github.com/ryurock/node-scoket-server/blob/master/LICENSE"
+  }],
+
+  "repository" : {
+    "type": "git",
+    "url": "https://github.com/ryurock/node-socket-server.git"
+  },
+
+  "dependencies": {
+  },
+
+  "engines": {
+    "node": ">= 0.10.20"
+  }
+}
