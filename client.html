@@ -1,0 +1,176 @@
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>Bootstrap 101 Template</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="css/bootstrap/jumbotron.css">
+    <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Project name</a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="#">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#contact">Contact</a></li>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                <li><a href="#">Action</a></li>
+                <li><a href="#">Another action</a></li>
+                <li><a href="#">Something else here</a></li>
+                <li class="divider"></li>
+                <li class="dropdown-header">Nav header</li>
+                <li><a href="#">Separated link</a></li>
+                <li><a href="#">One more separated link</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div><!--/.navbar-collapse -->
+      </div>
+    </div>
+
+    <!-- Main jumbotron for a primary marketing message or call to action -->
+    <div class="middletron">
+      <div class="container">
+        <h3>新規タスクを作成する</h3>
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="form-group">
+              <label for="task-detail">タスクを入力してください</label>
+              <textarea class="form-control task-value" rows="3"></textarea>
+            </div>
+            <div class="form-group">
+              <label for="task-group">タスクのグループ名を入力してください</label>
+              <input type="text" class="form-control" id="task-group-name" placeholder="アルファベット（半角）">
+            </div>
+            <button type="submit" class="btn btn-create-task">タスクを作成する</button>
+            <br />
+            <br />
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+    <div class="jumbotron">
+      <div class="container">
+        <h3>未着手のタスク置き場</h3>
+        <hr>
+        <div class="row grid-border-right not-yet-started">
+          <div class="col-lg-12 text-info zero-task-view">
+            <h2>未着手のタスクはありません</h2>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <!-- Example row of columns -->
+      <div class="row grid-border-right">
+        <div class="col-lg-3">
+          <h2>Heading</h2>
+          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+          <p><a class="btn btn-default" href="#">View details &raquo;</a></p>
+        </div>
+        <div class="col-lg-3">
+          <h2>Heading</h2>
+          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+          <p><a class="btn btn-default" href="#">View details &raquo;</a></p>
+       </div>
+        <div class="col-lg-3">
+          <h2>Heading</h2>
+          <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
+          <p><a class="btn btn-default" href="#">View details &raquo;</a></p>
+        </div>
+        <div class="col-lg-3">
+          <h2>Heading</h2>
+          <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
+          <p><a class="btn btn-default" href="#">View details &raquo;</a></p>
+        </div>
+      </div>
+
+      <hr>
+
+      <footer>
+        <p>&copy; Company 2013</p>
+      </footer>
+    </div> <!-- /container -->
+
+
+
+
+
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="//code.jquery.com/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap/bootstrap.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      $(function () {
+
+          if ($('.not-yet-started > col-lg-3').length > 0) {
+              $('.not-yet-started > col-lg-3').hide()
+          }
+
+
+          var socket = io.connect();
+
+          socket.emit('ready')
+
+          $('.btn-create-task').click(function() {
+              console.log('create task socket.io Start')
+              var data = {
+                room : $('#task-group-name').val(),
+                value : {
+                  taskDetail : $('.task-value').val()
+                }
+              }
+              // Emit ready event.
+              socket.emit('get-task-value', data)
+
+          });
+          // Listen for session event.
+          socket.on('session-task-added', function(data) {
+              console.log('receive emit socket.io response')
+              console.log(data)
+              $('.not-yet-started').after('<div class="col-lg-4"><p>' + data.task.value.taskDetail + '<p></div>')
+              $('.zero-task-view').hide()
+          })
+      })
+
+
+
+
+
+      // Emit ready event.
+      //socket.emit('ready', prompt('What is your name?'))
+    
+      // Listen for get-feelings event.
+      //socket.on('get-feelings', function () {
+      //    socket.emit('send-feelings', prompt('How do you feel?'));
+      //})
+    
+      //// Listen for session event.
+      //socket.on('session', function(data) {
+      //    message = 'Hey ' + data.name + '!\n\n' 
+      //    message += 'Server says you feel '+ data.feelings + '\n'
+      //    message += 'I know these things because sessions work!\n\n'
+      //    message += 'Also, you joined ' + data.loginDate + '\n'
+      //    alert(message)
+      //})
+    </script>
+</body>
+
