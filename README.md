@@ -1,4 +1,4 @@
-node-scoket-server
+express.io-server
 ==================
 
-nodeJS Scoket.io Server Sample
+nodeJS [express.io](https://github.com/techpines/express.io) Framework samples
